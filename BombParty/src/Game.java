@@ -1,17 +1,28 @@
 import java.util.Scanner;
 import java.util.HashSet;
+import java.util.ArrayList;
 import java.io.File;
 import java.io.FileNotFoundException;
 
 public class Game
 {
     private final HashSet<String> DICTIONARY;
-    private String letterCombo;
 
-    public Game()
+    private String letterCombo;
+    private ArrayList<Player> playerList;
+    private int currentPlayer;
+
+    // precondition: initPlayers cannot be null
+    public Game(Player[] initPlayers)
     {
         DICTIONARY = formDictSet();
-        letterCombo = generateLetterCombo();
+        letterCombo = generateNewLetterCombo();
+        currentPlayer = 0;
+        playerList = new ArrayList<>();
+        for (Player user : initPlayers)
+        {
+            playerList.add(user);
+        }
     }
 
     public boolean userInputCheck(String userInput)
@@ -37,7 +48,7 @@ public class Game
     {
         try
         {
-            File dictText = new File("C:\\Users\\Daniel Huang\\IdeaProjects\\BombParty\\src\\words_alpha.txt");
+            File dictText = new File("C:\\Users\\Daniel Huang\\Documents\\GitHub\\BombParty\\BombParty\\src\\words_alpha.txt");
             Scanner reader = new Scanner(dictText);
             HashSet<String> output = new HashSet<>();
             while (reader.hasNextLine())
@@ -55,7 +66,7 @@ public class Game
         return null;
     }
 
-    private String generateLetterCombo()
+    private String generateNewLetterCombo()
     {
         String[] dictArray = DICTIONARY.toArray(new String[DICTIONARY.size()]);
         String selectedWord = "";
@@ -88,5 +99,16 @@ public class Game
     public String getLetterCombo()
     {
         return letterCombo;
+    }
+
+    public Player getCurrentPlayer()
+    {
+        return playerList.get(currentPlayer);
+    }
+
+    public String toString()
+    {
+        return "Player: " + playerList.get(currentPlayer).getName()
+                + "\n\nYour combination: " + letterCombo + "\nPlease type a word: ";
     }
 }

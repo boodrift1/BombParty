@@ -1,15 +1,26 @@
 public class Player
 {
-    private int timeLeft; // counted in milliseconds
     private int lives;
-    private boolean currentlyPlaying;
+    private String name;
 
-    public Player(boolean initTurn)
+    public Player(String initName)
     {
-        lives = 3;
-        timeLeft = 5000;
-        currentlyPlaying = initTurn;
+        name = initName;
+        lives = 1;
     }
-
-    
+    public boolean hasLives()
+    {
+        return !(lives == 0);
+    }
+    public void lifeLost()
+    {
+        if (hasLives())
+        {
+            lives--;
+        }
+    }
+    public String getName()
+    {
+        return name;
+    }
 }

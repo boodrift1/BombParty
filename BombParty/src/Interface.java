@@ -1,24 +1,28 @@
-import java.util.Scanner;
+import java.util.*;
+import java.util.concurrent.*;
+
 
 public class Interface
 {
     public static void main(String[] args)
     {
-        Game myGame = new Game();
-
-        System.out.println("Your combination: " + myGame.getLetterCombo());
-
         Scanner input = new Scanner(System.in);
-        System.out.print("Please type a word: ");
+        System.out.print("Please enter a name: ");
+        Player[] userList = {new Player(input.nextLine())};
+        System.out.println();
+
+        Game myGame = new Game(userList);
+        System.out.println(myGame);
+
         String userInput = input.nextLine();
 
         if (myGame.userInputCheck(userInput))
         {
-            System.out.println("Valid");
+            System.out.println("You are valid.");
         }
         else
         {
-            System.out.println("You are not valid");
+            System.out.println("YOU SUCK");
         }
     }
 }
