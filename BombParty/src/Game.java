@@ -3,6 +3,7 @@ import java.util.HashSet;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.concurrent.*;
 
 public class Game
 {
@@ -42,6 +43,49 @@ public class Game
             return false;
         }
         return dict.contains(userInput);
+    }
+
+    public boolean playOneTurn()
+    {
+        Callable<String> k = () -> new Scanner(System.in).nextLine();
+        long start = System.currentTimeMillis();
+        String userInput = "";
+        boolean validInput = false;
+        ExecutorService l = Executors.newFixedThreadPool(1);
+        Future<String> g;
+
+        System.out.print(this);
+        g = l.submit(k);
+        done: while(System.currentTimeMillis() - start < 5 * 1000)
+        {
+            do {
+                validInput = true;
+                if (g.isDone()) {
+                    try {
+                        userInput = g.get();
+                        if (userInputCheck(userInput)) {
+                            break done;
+                        }
+                        else {
+                            throw new IllegalArgumentException();
+                        }
+                    }
+                    catch (InterruptedException | ExecutionException | IllegalArgumentException e) {
+                        g = l.submit(k);
+                        validInput = false;
+                    }
+                }
+            }
+            while (!validInput);
+        }
+        g.cancel(true);
+
+        if (validInput) {
+            if (userInputCheck(userInput)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private HashSet<String> formDictSet()
