@@ -51,7 +51,7 @@ public class Game
             playerList.add(new Player(input.nextLine()));
         }
 
-        System.out.print("Enter difficulty (1 = easy, 2 = medium, 3 = hard): ");
+        System.out.print("Enter difficulty (1 = easy, 2 = medium, 3 = entire dictionary): ");
         comboSet = formDictSet(input.nextInt());
 
         input.nextLine();
@@ -213,8 +213,7 @@ public class Game
                 + "\nPlease type a word: ";
     }
 
-    // precondition: at least one person has lives
-    // postcondition: index of winner; if no winners, then return -1
+    // returns index of winner; if no winners, then return -1
     private int winCheck()
     {
         int winnerIndex = -1;
