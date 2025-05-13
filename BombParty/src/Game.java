@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 public class Game
 {
     private final HashSet<String> DICTIONARY;
-
+    private HashSet<String> comboSet;
     private Scanner input;
     private String letterCombo;
     private ArrayList<Player> playerList;
@@ -18,10 +18,10 @@ public class Game
     // precondition: initPlayers cannot be null
     public Game()
     {
-        DICTIONARY = formDictSet();
-
+        DICTIONARY = formDictSet(3);
+        comboSet = null;
         input = new Scanner(System.in);
-        letterCombo = generateNewLetterCombo();
+        letterCombo = generateNewLetterCombo(DICTIONARY);
         currentPlayer = 0;
         repeatWordCount = 0;
         playerList = new ArrayList<>();
@@ -47,11 +47,15 @@ public class Game
         input.nextLine();
 
         for (int i = 0; i < playerCount; i++) {
-            System.out.print("Please enter a name: ");
+            System.out.print("Enter a name: ");
             playerList.add(new Player(input.nextLine()));
         }
 
-        System.out.print("Type any key to start the game (first player goes first): ");
+        System.out.print("Enter difficulty (1 = easy, 2 = medium, 3 = hard): ");
+        comboSet = formDictSet(input.nextInt());
+
+        input.nextLine();
+        System.out.print("Type any key to start (first player goes first): ");
         input.nextLine();
     }
 
@@ -96,7 +100,7 @@ public class Game
         }
         else {
             System.out.println();
-            System.out.println("You lost a life!");
+            System.out.println(getCurrentPlayer().getName() + " lost a life!");
             getCurrentPlayer().lifeLost();
             repeatWordCount++;
             if (repeatWordCount == 2)
@@ -129,11 +133,21 @@ public class Game
         } while ((winCheck() == -1) && !getCurrentPlayer().hasLives());
     }
 
-    private HashSet<String> formDictSet()
+    // type 1 = 1k, type 2 = 5k, type 3 = dictionary
+    private HashSet<String> formDictSet(int type)
     {
         try
         {
-            File dictText = new File("C:\\Users\\Daniel Huang\\Documents\\GitHub\\BombParty\\BombParty\\src\\words_alpha.txt");
+            File dictText = null;
+            if (type == 1) {
+                dictText = new File("C:\\Users\\Daniel Huang\\Documents\\GitHub\\BombParty\\BombParty\\src\\1k.txt");
+            }
+            else if (type == 2) {
+                dictText = new File("C:\\Users\\Daniel Huang\\Documents\\GitHub\\BombParty\\BombParty\\src\\5k.txt");
+            }
+            else if (type == 3) {
+                dictText = new File("C:\\Users\\Daniel Huang\\Documents\\GitHub\\BombParty\\BombParty\\src\\dictionary.txt");
+            }
             Scanner reader = new Scanner(dictText);
             HashSet<String> output = new HashSet<>();
             while (reader.hasNextLine())
@@ -153,12 +167,12 @@ public class Game
 
     private void changeLetterCombo()
     {
-        letterCombo = generateNewLetterCombo();
+        letterCombo = generateNewLetterCombo(comboSet);
     }
 
-    private String generateNewLetterCombo()
+    private String generateNewLetterCombo(HashSet<String> input)
     {
-        String[] dictArray = DICTIONARY.toArray(new String[DICTIONARY.size()]);
+        String[] comboArray = input.toArray(new String[input.size()]);
         String selectedWord = "";
 
         int wordType = (int)(Math.random()*2);
@@ -167,8 +181,8 @@ public class Game
         {
             while (selectedWord.length() < 2)
             {
-                int arrayIndex = (int)(Math.random() * dictArray.length);
-                selectedWord = dictArray[arrayIndex];
+                int arrayIndex = (int)(Math.random() * comboArray.length);
+                selectedWord = comboArray[arrayIndex];
             }
             int wordSubstringIndex = (int)(Math.random() * (selectedWord.length() - 1));
             return selectedWord.substring(wordSubstringIndex, wordSubstringIndex + 2);
@@ -178,8 +192,8 @@ public class Game
         {
             while (selectedWord.length() < 3)
             {
-                int arrayIndex = (int)(Math.random() * dictArray.length);
-                selectedWord = dictArray[arrayIndex];
+                int arrayIndex = (int)(Math.random() * comboArray.length);
+                selectedWord = comboArray[arrayIndex];
             }
             int wordSubstringIndex = (int)(Math.random() * (selectedWord.length() - 2));
             return selectedWord.substring(wordSubstringIndex, wordSubstringIndex + 3);
