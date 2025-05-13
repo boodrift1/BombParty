@@ -6,7 +6,7 @@ public class Player
     public Player(String initName)
     {
         name = initName;
-        lives = 1;
+        lives = 2;
     }
     public boolean hasLives()
     {
@@ -18,6 +18,10 @@ public class Player
         {
             lives--;
         }
+    }
+    public int getLives()
+    {
+        return lives;
     }
     public String getName()
     {

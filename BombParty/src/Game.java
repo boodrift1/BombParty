@@ -9,24 +9,47 @@ public class Game
 {
     private final HashSet<String> DICTIONARY;
 
+    private Scanner input;
     private String letterCombo;
     private ArrayList<Player> playerList;
     private int currentPlayer;
+    private int repeatWordCount;
 
     // precondition: initPlayers cannot be null
-    public Game(Player[] initPlayers)
+    public Game()
     {
         DICTIONARY = formDictSet();
+
+        input = new Scanner(System.in);
         letterCombo = generateNewLetterCombo();
         currentPlayer = 0;
+        repeatWordCount = 0;
         playerList = new ArrayList<>();
-        for (Player user : initPlayers)
+        initiateGame();
+    }
+
+    public void play()
+    {
+        while (winCheck() == -1)
         {
-            playerList.add(user);
+            playOneTurn();
+        }
+        System.out.print(printWin());
+    }
+
+    private void initiateGame()
+    {
+        System.out.print("Enter the number of players (2 or more): ");
+        int playerCount = input.nextInt();
+        input.nextLine();
+
+        for (int i = 0; i < playerCount; i++) {
+            System.out.print("Please enter a name: ");
+            playerList.add(new Player(input.nextLine()));
         }
     }
 
-    public boolean userInputCheck(String userInput)
+    private boolean userInputCheck(String userInput)
     {
         return (comboCheck(userInput, letterCombo) && dictionaryCheck(userInput, DICTIONARY));
     }
@@ -45,25 +68,28 @@ public class Game
         return dict.contains(userInput);
     }
 
-    public boolean playOneTurn()
+    private void playOneTurn()
     {
-        Callable<String> k = () -> new Scanner(System.in).nextLine();
+        /*
+        Callable<String> k = () -> input.nextLine();
         long start = System.currentTimeMillis();
-        String userInput = "";
-        boolean validInput = false;
+        String userInput;
+        boolean valid;
+        boolean correctInput = false;
         ExecutorService l = Executors.newFixedThreadPool(1);
         Future<String> g;
 
-        System.out.print(this);
+        System.out.println(this);
         g = l.submit(k);
         done: while(System.currentTimeMillis() - start < 5 * 1000)
         {
             do {
-                validInput = true;
+                valid = true;
                 if (g.isDone()) {
                     try {
                         userInput = g.get();
                         if (userInputCheck(userInput)) {
+                            correctInput = true;
                             break done;
                         }
                         else {
@@ -72,20 +98,53 @@ public class Game
                     }
                     catch (InterruptedException | ExecutionException | IllegalArgumentException e) {
                         g = l.submit(k);
-                        validInput = false;
+                        valid = false;
                     }
                 }
             }
-            while (!validInput);
+            while (!valid);
         }
         g.cancel(true);
+         */
 
-        if (validInput) {
-            if (userInputCheck(userInput)) {
-                return true;
+        System.out.println();
+        System.out.println(this);
+
+        boolean correctInput = userInputCheck(input.nextLine());
+
+        if (currentPlayerIsAlive()) {
+            if (correctInput) {
+                changeLetterCombo();
+                turnSwitch();
+            }
+            else {
+                getCurrentPlayer().lifeLost();
+                repeatWordCount++;
+                if (repeatWordCount == 2)
+                {
+                    changeLetterCombo();
+                    repeatWordCount = 0;
+                }
+                turnSwitch();
             }
         }
-        return false;
+    }
+
+    private boolean currentPlayerIsAlive()
+    {
+        return getCurrentPlayer().hasLives();
+    }
+
+    private void turnSwitch()
+    {
+        do
+        {
+            currentPlayer++;
+            if (currentPlayer == playerList.size())
+            {
+                currentPlayer = 0;
+            }
+        } while ((winCheck() == -1) && !getCurrentPlayer().hasLives());
     }
 
     private HashSet<String> formDictSet()
@@ -108,6 +167,11 @@ public class Game
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void changeLetterCombo()
+    {
+        letterCombo = generateNewLetterCombo();
     }
 
     private String generateNewLetterCombo()
@@ -152,7 +216,37 @@ public class Game
 
     public String toString()
     {
-        return "Player: " + playerList.get(currentPlayer).getName()
-                + "\n\nYour combination: " + letterCombo + "\nPlease type a word: ";
+        return "Player: " + getCurrentPlayer().getName()
+                + "\nLives: " + getCurrentPlayer().getLives()
+                + "\nYour combination: " + letterCombo
+                + "\nPlease type a word: ";
+    }
+
+    // precondition: at least one person has lives
+    // postcondition: index of winner; if no winners, then return -1
+    private int winCheck()
+    {
+        int winnerIndex = -1;
+        for (int i = 0; i < playerList.size(); i++)
+        {
+            if (playerList.get(i).hasLives())
+            {
+                if (winnerIndex != -1)
+                {
+                    return -1;
+                }
+                else
+                {
+                    winnerIndex = i;
+                }
+            }
+        }
+        return winnerIndex;
+    }
+
+    public String printWin()
+    {
+        int winnerIndex = winCheck();
+        return "Player " + playerList.get(winnerIndex).getName() + " wins!";
     }
 }
