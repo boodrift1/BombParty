@@ -6,42 +6,40 @@ import java.io.FileNotFoundException;
 
 public class Game
 {
-    private final HashSet<String> DICTIONARY;
-    private HashSet<String> comboSet;
+    // takes all player inputs
     private Scanner input;
+
+    // dictionary that all user-submitted words are compared to
+    private final HashSet<String> DICTIONARY;
+
+    // set used to create new letterCombo
+    private HashSet<String> comboSet;
     private String letterCombo;
-    private ArrayList<Player> playerList;
-    private ArrayList<String> usedWordList;
+
+    // index of current player playing
     private int currentPlayer;
+
+    // counts how many times a letterCombo has been repeated
     private int repeatWordCount;
+
+    // ArrayList of all players
+    private ArrayList<Player> playerList;
+
+    // tracks all used words; used words cannot be repeated
+    private ArrayList<String> usedWordList;
 
     // precondition: initPlayers cannot be null
     public Game()
     {
-        DICTIONARY = formDictSet(3);
-        comboSet = null;
         input = new Scanner(System.in);
-        letterCombo = generateNewLetterCombo(DICTIONARY);
+        DICTIONARY = formDictSet(3);
+
         currentPlayer = 0;
         repeatWordCount = 0;
+
         playerList = new ArrayList<>();
         usedWordList = new ArrayList<>();
-        initiateGame();
-    }
 
-    public void play()
-    {
-        while (winCheck() == -1)
-        {
-            // interval between 5 and 15 seconds
-            long interval = (long)(Math.random()*10001) + 5000;
-            playOneTurn(interval);
-        }
-        System.out.print(printWin());
-    }
-
-    private void initiateGame()
-    {
         System.out.print("Enter the number of players (2 or more): ");
         int playerCount = input.nextInt();
         input.nextLine();
@@ -54,30 +52,44 @@ public class Game
         System.out.print("Enter difficulty (1 = easy, 2 = medium, 3 = entire dictionary): ");
         comboSet = formDictSet(input.nextInt());
 
+        // initiates letterCombo
+        changeLetterCombo();
+
         input.nextLine();
         System.out.print("Type any key to start (first player goes first): ");
         input.nextLine();
     }
 
+    public void play()
+    {
+        while (winCheck() == -1)
+        {
+            // interval between 3 and 15 seconds
+            long interval = (long)(Math.random()*12001) + 3000;
+            playOneTurn(interval);
+        }
+        System.out.print(printWin());
+    }
+
+    // returns true if userInput includes combination & is an actual word; false otherwise
     private boolean userInputCheck(String userInput)
     {
         return (comboCheck(userInput, letterCombo) && dictionaryCheck(userInput, DICTIONARY));
     }
 
+    // returns true if userInput includes letterCombo; false otherwise
     private boolean comboCheck(String userInput, String letterCombo)
     {
         return userInput.indexOf(letterCombo) != -1;
     }
 
+    // returns true if userInput is an actual word; false otherwise
     private boolean dictionaryCheck(String userInput, HashSet<String> dict)
     {
-        if (dict == null)
-        {
-            return false;
-        }
         return dict.contains(userInput);
     }
 
+    // used during a player's turn; determines validity of answer & switches turn
     private void playOneTurn(long timeInterval)
     {
         System.out.println();
@@ -92,16 +104,20 @@ public class Game
             userInterval = System.currentTimeMillis() - start;
         }
 
+        System.out.println();
         if (userInputCheck(userInput) && !isInUsedWordList(userInput) && timeInterval > userInterval) {
-            System.out.println();
             System.out.println("Good answer!");
             usedWordList.add(userInput);
             changeLetterCombo();
         }
         else {
-            System.out.println();
-            System.out.println(getCurrentPlayer().getName() + " lost a life!");
             getCurrentPlayer().lifeLost();
+            System.out.println(getCurrentPlayer().getName() + " lost a life!");
+            if (!getCurrentPlayer().hasLives()) {
+                System.out.println(getCurrentPlayer().getName() + " is eliminated!");
+            }
+
+            // only change letterCombo if it has been attempted twice
             repeatWordCount++;
             if (repeatWordCount == 2)
             {
@@ -123,6 +139,7 @@ public class Game
         return false;
     }
 
+    // changes turn; skips over players with no lives
     private void turnSwitch()
     {
         do {
@@ -157,6 +174,7 @@ public class Game
             reader.close();
             return output;
         }
+        // this code runs if the text file is not found
         catch (FileNotFoundException e)
         {
             System.out.println("An error occurred.");
@@ -170,6 +188,7 @@ public class Game
         letterCombo = generateNewLetterCombo(comboSet);
     }
 
+    // returns 2 or 3 letter substring from a random word
     private String generateNewLetterCombo(HashSet<String> input)
     {
         String[] comboArray = input.toArray(new String[input.size()]);
@@ -200,19 +219,6 @@ public class Game
         }
     }
 
-    private Player getCurrentPlayer()
-    {
-        return playerList.get(currentPlayer);
-    }
-
-    public String toString()
-    {
-        return "Player: " + getCurrentPlayer().getName()
-                + "\nLives: " + getCurrentPlayer().getLives()
-                + "\nYour combination: " + letterCombo
-                + "\nPlease type a word: ";
-    }
-
     // returns index of winner; if no winners, then return -1
     private int winCheck()
     {
@@ -234,9 +240,24 @@ public class Game
         return winnerIndex;
     }
 
+    // used when a player wins
     private String printWin()
     {
         int winnerIndex = winCheck();
         return "\nPlayer " + playerList.get(winnerIndex).getName() + " wins!";
+    }
+
+    private Player getCurrentPlayer()
+    {
+        return playerList.get(currentPlayer);
+    }
+
+    // used in play() method to show game state
+    public String toString()
+    {
+        return "Player: " + getCurrentPlayer().getName()
+                + "\nLives: " + getCurrentPlayer().getLives()
+                + "\nYour combination: " + letterCombo
+                + "\nPlease type a word: ";
     }
 }
