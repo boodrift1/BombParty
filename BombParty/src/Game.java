@@ -64,8 +64,8 @@ public class Game
     {
         while (winCheck() == -1)
         {
-            // interval between 3 and 15 seconds
-            long interval = (long)(Math.random()*12001) + 3000;
+            // interval between 5 and 15 seconds
+            long interval = (long)(Math.random()*10001) + 5000;
             playOneTurn(interval);
         }
         System.out.print(printWin());
