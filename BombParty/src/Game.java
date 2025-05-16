@@ -81,7 +81,7 @@ public class Game
             playOneGame();
             System.out.print("\nContinue playing? [y/n]: ");
             retry = input.nextLine();
-            reset();
+            resetGame();
         }
         System.exit(0);
     }
@@ -98,7 +98,8 @@ public class Game
         System.out.print(printWin());
     }
 
-    private void reset() {
+    // resets game; players & difficulty kept
+    private void resetGame() {
         for (Player player : playerList) {
             player.reset();
         }
