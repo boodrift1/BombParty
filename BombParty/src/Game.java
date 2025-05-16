@@ -52,8 +52,6 @@ public class Game
 
         playerList = new ArrayList<>();
         usedWordList = new ArrayList<>();
-
-        initiateGame();
     }
 
     private void initiateGame() {
@@ -74,6 +72,7 @@ public class Game
     }
 
     public void playSession() {
+        initiateGame();
         String retry = "y";
         while (retry.equals("y")) {
             System.out.print("Type any key to start (first player goes first): ");
@@ -143,6 +142,7 @@ public class Game
             System.out.println("Good answer!");
             usedWordList.add(userInput);
             changeLetterCombo();
+            repeatWordCount = 0;
         }
         else {
             getCurrentPlayer().lifeLost();
