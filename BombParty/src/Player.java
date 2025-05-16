@@ -1,16 +1,18 @@
 public class Player
 {
+    private final int MAX_LIVES;
     private int lives;
     private String name;
 
     public Player(String initName)
     {
+        MAX_LIVES = 3;
         name = initName;
-        lives = 3;
+        lives = MAX_LIVES;
     }
 
     public void reset() {
-        lives = 3;
+        lives = MAX_LIVES;
     }
 
     public boolean hasLives()

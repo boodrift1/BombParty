@@ -5,6 +5,14 @@ import java.io.*;
 
 public class Game
 {
+    // lowest time interval possible
+    // units: seconds
+    private final long TIME_START;
+
+    // range for randomly generated time from TIME_START
+    // units: seconds
+    private final long TIME_INTERVAL;
+
     // takes all player inputs
     private Scanner input;
 
@@ -30,6 +38,9 @@ public class Game
     // precondition: initPlayers cannot be null
     public Game()
     {
+        TIME_START = 5;
+        TIME_INTERVAL = 10;
+
         input = new Scanner(System.in);
         DICTIONARY = formDictSet(3);
 
@@ -78,8 +89,9 @@ public class Game
     private void play() {
         while (winCheck() == -1)
         {
-            // interval between 5 and 15 seconds
-            long interval = (long)(Math.random()*10001) + 5000;
+            // variables need to be converted to milliseconds (*1000)
+            // +1 required for interval to be inclusive from TIME_START to TIME_START + TIME_INTERVAL
+            long interval = (long)(Math.random() * (TIME_INTERVAL * 1000) + 1) + (TIME_START * 1000);
             playOneTurn(interval);
         }
         System.out.print(printWin());
