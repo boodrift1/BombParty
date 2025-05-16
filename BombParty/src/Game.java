@@ -21,6 +21,9 @@ public class Game
 
     // set used to create new letterCombo
     private HashSet<String> comboSet;
+
+    // letter combination that the player is prompted with
+    // changes after one correct answer or two consecutive incorrect answers
     private String letterCombo;
 
     // index of current player playing
@@ -71,7 +74,7 @@ public class Game
         changeLetterCombo();
     }
 
-    // code that runs one play session; allows for resetting game
+    // code that runs play session; allows for resetting game
     public void playSession() {
         initiateGame();
         String retry = "y";
@@ -79,6 +82,7 @@ public class Game
             System.out.print("Type any key to start (first player goes first): ");
             input.nextLine();
             playOneGame();
+
             System.out.print("\nContinue playing? [y/n]: ");
             retry = input.nextLine();
             resetGame();
