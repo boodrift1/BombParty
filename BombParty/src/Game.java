@@ -71,13 +71,14 @@ public class Game
         changeLetterCombo();
     }
 
+    // code that runs one play session; allows for resetting game
     public void playSession() {
         initiateGame();
         String retry = "y";
         while (retry.equals("y")) {
             System.out.print("Type any key to start (first player goes first): ");
             input.nextLine();
-            play();
+            playOneGame();
             System.out.print("\nContinue playing? [y/n]: ");
             retry = input.nextLine();
             reset();
@@ -85,7 +86,8 @@ public class Game
         System.exit(0);
     }
 
-    private void play() {
+    // plays actual game, with players swapping turns
+    private void playOneGame() {
         while (winCheck() == -1)
         {
             // variables need to be converted to milliseconds (*1000)
@@ -286,7 +288,7 @@ public class Game
         return playerList.get(currentPlayer);
     }
 
-    // used in play() method to show game state
+    // used in playOneGame() method to show game state
     public String toString()
     {
         return "Player: " + getCurrentPlayer().getName()
