@@ -1,8 +1,7 @@
 import java.util.Scanner;
 import java.util.HashSet;
 import java.util.ArrayList;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 
 public class Game
 {
@@ -34,12 +33,19 @@ public class Game
         input = new Scanner(System.in);
         DICTIONARY = formDictSet(3);
 
+        letterCombo = "";
+        comboSet = null;
+
         currentPlayer = 0;
         repeatWordCount = 0;
 
         playerList = new ArrayList<>();
         usedWordList = new ArrayList<>();
 
+        initiateGame();
+    }
+
+    private void initiateGame() {
         System.out.print("Enter the number of players (2 or more): ");
         int playerCount = input.nextInt();
         input.nextLine();
@@ -51,17 +57,25 @@ public class Game
 
         System.out.print("Enter difficulty (1 = easy, 2 = medium, 3 = entire dictionary): ");
         comboSet = formDictSet(input.nextInt());
+        input.nextLine();
 
-        // initiates letterCombo
         changeLetterCombo();
-
-        input.nextLine();
-        System.out.print("Type any key to start (first player goes first): ");
-        input.nextLine();
     }
 
-    public void play()
-    {
+    public void playSession() {
+        String retry = "y";
+        while (retry.equals("y")) {
+            System.out.print("Type any key to start (first player goes first): ");
+            input.nextLine();
+            play();
+            System.out.print("\nContinue playing? [y/n]: ");
+            retry = input.nextLine();
+            reset();
+        }
+        System.exit(0);
+    }
+
+    private void play() {
         while (winCheck() == -1)
         {
             // interval between 5 and 15 seconds
@@ -69,6 +83,14 @@ public class Game
             playOneTurn(interval);
         }
         System.out.print(printWin());
+    }
+
+    private void reset() {
+        for (Player player : playerList) {
+            player.reset();
+        }
+        currentPlayer = 0;
+        changeLetterCombo();
     }
 
     // returns true if userInput includes combination & is an actual word; false otherwise

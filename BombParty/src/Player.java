@@ -8,6 +8,11 @@ public class Player
         name = initName;
         lives = 3;
     }
+
+    public void reset() {
+        lives = 3;
+    }
+
     public boolean hasLives()
     {
         return !(lives == 0);
