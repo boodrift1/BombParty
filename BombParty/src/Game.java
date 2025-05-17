@@ -57,19 +57,6 @@ public class Game
         usedWordList = new ArrayList<>();
     }
 
-    private void initiateGame(int playerCount) {
-        for (int i = 0; i < playerCount; i++) {
-            System.out.print("Enter a name: ");
-            playerList.add(new Player(input.nextLine()));
-        }
-
-        System.out.print("Enter difficulty (1 = easy, 2 = medium, 3 = entire dictionary): ");
-        comboSet = formDictSet(input.nextInt());
-        input.nextLine();
-
-        changeLetterCombo();
-    }
-
     // code that runs play session given player count; allows for resetting game
     public void playSession() {
         System.out.print("Enter the number of players (2 or more): ");
@@ -89,6 +76,20 @@ public class Game
             resetGame();
         }
         System.exit(0);
+    }
+
+    // changes player names and difficulty mode
+    private void initiateGame(int playerCount) {
+        for (int i = 0; i < playerCount; i++) {
+            System.out.print("Enter a name: ");
+            playerList.add(new Player(input.nextLine()));
+        }
+
+        System.out.print("Enter difficulty (1 = easy, 2 = medium, 3 = entire dictionary): ");
+        comboSet = formDictSet(input.nextInt());
+        input.nextLine();
+
+        changeLetterCombo();
     }
 
     // plays actual game, with players swapping turns
@@ -290,7 +291,7 @@ public class Game
         return "\nPlayer " + playerList.get(winnerIndex).getName() + " wins!";
     }
 
-    public Player getCurrentPlayer()
+    private Player getCurrentPlayer()
     {
         return playerList.get(currentPlayer);
     }
@@ -304,8 +305,7 @@ public class Game
                 + "\nPlease type a word: ";
     }
 
-
-    // used for local multiplayer
+    // local multiplayer
     public static void main(String[] args) {
         Game myGame = new Game();
         myGame.playSession();
