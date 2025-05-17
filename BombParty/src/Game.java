@@ -57,11 +57,7 @@ public class Game
         usedWordList = new ArrayList<>();
     }
 
-    private void initiateGame() {
-        System.out.print("Enter the number of players (2 or more): ");
-        int playerCount = input.nextInt();
-        input.nextLine();
-
+    private void initiateGame(int playerCount) {
         for (int i = 0; i < playerCount; i++) {
             System.out.print("Enter a name: ");
             playerList.add(new Player(input.nextLine()));
@@ -74,9 +70,14 @@ public class Game
         changeLetterCombo();
     }
 
-    // code that runs play session; allows for resetting game
+    // code that runs play session given player count; allows for resetting game
     public void playSession() {
-        initiateGame();
+        System.out.print("Enter the number of players (2 or more): ");
+        int playerCount = input.nextInt();
+        input.nextLine();
+
+        initiateGame(playerCount);
+
         String retry = "y";
         while (retry.equals("y")) {
             System.out.print("Type any key to start (first player goes first): ");
@@ -91,6 +92,7 @@ public class Game
     }
 
     // plays actual game, with players swapping turns
+    // includes timer
     private void playOneGame() {
         while (winCheck() == -1)
         {
@@ -288,7 +290,7 @@ public class Game
         return "\nPlayer " + playerList.get(winnerIndex).getName() + " wins!";
     }
 
-    private Player getCurrentPlayer()
+    public Player getCurrentPlayer()
     {
         return playerList.get(currentPlayer);
     }
@@ -300,5 +302,12 @@ public class Game
                 + "\nLives: " + getCurrentPlayer().getLives()
                 + "\nYour combination: " + letterCombo
                 + "\nPlease type a word: ";
+    }
+
+
+    // used for local multiplayer
+    public static void main(String[] args) {
+        Game myGame = new Game();
+        myGame.playSession();
     }
 }

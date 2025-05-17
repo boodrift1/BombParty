@@ -3,7 +3,7 @@ public class Player
     private final int MAX_LIVES;
     private int lives;
     private String name;
-
+    
     public Player(String initName)
     {
         MAX_LIVES = 3;
