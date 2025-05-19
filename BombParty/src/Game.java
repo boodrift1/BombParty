@@ -5,7 +5,7 @@ import java.io.*;
 
 public class Game
 {
-    // lowest time interval possible
+    // lowest time interval possible for one turn
     // units: seconds
     private final long TIME_START;
 
