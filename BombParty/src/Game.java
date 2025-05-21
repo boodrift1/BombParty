@@ -63,6 +63,10 @@ public class Game
         int playerCount = input.nextInt();
         input.nextLine();
 
+        if (playerCount < 2) {
+            System.exit(0);
+        }
+
         initiateGame(playerCount);
 
         String retry = "y";
@@ -147,10 +151,27 @@ public class Game
             userInterval = System.currentTimeMillis() - start;
         }
 
+        // this code runs after user input finishes
         System.out.println();
         if (userInputCheck(userInput) && !isInUsedWordList(userInput) && timeInterval > userInterval) {
             System.out.println("Good answer!");
+
+            // adds user input into used word list
             usedWordList.add(userInput);
+
+            // checks for bonus life
+            bonusOperation(userInput, getCurrentPlayer());
+            if (getCurrentPlayer().eligibleForBonusLife()) {
+                boolean gainedLife = getCurrentPlayer().lifeGained();
+                getCurrentPlayer().bonusReset();
+                if (gainedLife) {
+                    System.out.println(getCurrentPlayer().getName() + " gained a life! Bonus reset!");
+                }
+                else {
+                    System.out.println(getCurrentPlayer().getName() + " is at max lives. Bonus reset!");
+                }
+            }
+
             changeLetterCombo();
             repeatWordCount = 0;
         }
@@ -181,6 +202,18 @@ public class Game
             }
         }
         return false;
+    }
+
+
+    private void bonusOperation(String input, Player user) {
+        for (int i = 0; i < input.length(); i++)
+        {
+            boolean letterChanged = user.bonusLetterCheck(input);
+            if (!letterChanged)
+            {
+                break;
+            }
+        }
     }
 
     // changes turn; skips over players with no lives
@@ -301,6 +334,7 @@ public class Game
     {
         return "Player: " + getCurrentPlayer().getName()
                 + "\nLives: " + getCurrentPlayer().getLives()
+                + "\nBonus letters: " + getCurrentPlayer().getBonusLetters()
                 + "\nYour combination: " + letterCombo
                 + "\nPlease type a word: ";
     }
