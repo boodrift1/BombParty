@@ -38,7 +38,7 @@ public class Game
     // tracks all used words; used words cannot be repeated
     private ArrayList<String> usedWordList;
 
-    // precondition: initPlayers cannot be null
+    // constructor
     public Game()
     {
         TIME_START = 5;
