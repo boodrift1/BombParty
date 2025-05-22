@@ -16,13 +16,13 @@ public class Player
 
     // list of used letters that determine whether a player gains a life
     // includes all letters in the alphabet except for k, w, x, y, & z (uncommon letters)
-    // true letters = have not been used in user input
+    // false letters = have not been used in user input
     private HashMap<String, Boolean> bonusMap;
 
     public Player(String initName)
     {
         START_LIVES = 2;
-        MAX_LIVES = 2;
+        MAX_LIVES = 3;
         name = initName;
         lives = START_LIVES;
 
@@ -60,14 +60,13 @@ public class Player
         return !(lives == 0);
     }
 
-    // returns true if there is a false bonus letter in input
-    // returns false if bonus letter is not found or bonus letter is true
-    // chosen bonus letter is changed to true
+    // if there is a false bonus letter in input, chosen bonus letter is changed to true & returns true
+    // if bonus letter is not found or bonus letter is true, no action & returns false
     public boolean bonusLetterCheck(String input) {
         for (String letter : bonusMap.keySet()) {
             // checks if input contains letter
             if (input.indexOf(letter) != -1) {
-                // checks if letter is false
+                // checks if letter is false (hasn't been used)
                 if (bonusMap.get(letter).equals(false)) {
                     // put method overwrites current letter
                     bonusMap.put(letter, true);

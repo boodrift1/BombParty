@@ -162,8 +162,8 @@ public class Game
             // checks for bonus life
             bonusOperation(userInput, getCurrentPlayer());
             if (getCurrentPlayer().eligibleForBonusLife()) {
-                boolean gainedLife = getCurrentPlayer().lifeGained();
                 getCurrentPlayer().bonusReset();
+                boolean gainedLife = getCurrentPlayer().lifeGained();
                 if (gainedLife) {
                     System.out.println(getCurrentPlayer().getName() + " gained a life! Bonus reset!");
                 }
@@ -171,7 +171,6 @@ public class Game
                     System.out.println(getCurrentPlayer().getName() + " is at max lives. Bonus reset!");
                 }
             }
-
             changeLetterCombo();
             repeatWordCount = 0;
         }
@@ -204,7 +203,7 @@ public class Game
         return false;
     }
 
-
+    // updates status of bonus letters with user input
     private void bonusOperation(String input, Player user) {
         for (int i = 0; i < input.length(); i++)
         {
