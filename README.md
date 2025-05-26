@@ -10,5 +10,5 @@ Tutorials/external code used:
 - Try/Catch: https://www.w3schools.com/java/java_try_catch.asp
 - Set toArray() method in Java: https://www.geeksforgeeks.org/set-toarray-method-in-java-with-example/
 - Do/While loop: https://www.w3schools.com/java/java_while_loop_do.asp
-- currentTimeMillis() method: https://www.w3schools.com/java/java_while_loop_do.asp
+- currentTimeMillis() method: https://www.tutorialspoint.com/java/lang/system_currenttimemillis.htm
 - HashMap: https://www.w3schools.com/java/java_hashmap.asp
