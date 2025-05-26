@@ -4,7 +4,7 @@ Dictionaries used:
 - Whole dictionary (479k words): https://github.com/dwyl/english-words
 
 Tutorials/external code used:
-- English dictionary implementation idea: https://github.com/tgmgroup/Word-List-from-Oxford-Longman-5000/tree/master
+- English dictionary implementation idea: https://stackoverflow.com/questions/8986543/how-to-implement-an-english-dictionary-in-java
 - Reading files in Java: https://www.w3schools.com/java/java_files_read.asp
 - HashSet: https://www.w3schools.com/java/java_hashset.asp
 - Try/Catch: https://www.w3schools.com/java/java_try_catch.asp
